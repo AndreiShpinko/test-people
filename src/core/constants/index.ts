@@ -1,0 +1,15 @@
+export const color_white = "#fff",
+  color_black = "#000",
+  color_blue = "rgb(59, 183, 255)",
+  colors = [
+    "#f1f1f1",
+    "#ffeded",
+    "#f2ffed",
+    "#eefff4",
+    "#eef8ff",
+    "#f1eeff",
+    "#ffeefb",
+    "#ffeeee",
+    "#feffee",
+    "#eeffff",
+  ];
