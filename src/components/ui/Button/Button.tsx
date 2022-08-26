@@ -4,21 +4,14 @@ import styled from "styled-components";
 type ButtonProps = {
   children: string | React.ReactNode;
   click?: () => void;
-  styles?: string;
 };
 
-
-const Button = ({ children, click, styles }: ButtonProps) => {
-  return (
-    <BtnWrapper onClick={click} styles={styles}>
-      {children}
-    </BtnWrapper>
-  );
+const Button = ({ children, click }: ButtonProps) => {
+  return <BtnWrapper onClick={click}>{children}</BtnWrapper>;
 };
 
 interface BtnWrapperProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  styles?: string;
 }
 
 const BtnWrapper = styled.button<BtnWrapperProps>`
@@ -26,7 +19,7 @@ const BtnWrapper = styled.button<BtnWrapperProps>`
   padding: 8px 24px;
   border: 0;
   cursor: pointer;
-  ${({ styles }) => styles}
+  color: #000;
 `;
 
 export default Button;

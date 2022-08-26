@@ -1,21 +1,22 @@
-const Services = {
-  API_URL: "http://opn-interview-service.nn.r.appspot.com",
-  JWT: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxMjMiLCJpZGVudGl0eSI6IjEyMzQifQ.yOIx1ZozHSMy_ZndEEMXIH0YeGUkHH3idl_2WTI12gs",
+import axios from "axios";
 
+const Services = {
   getRandomUsers() {
-    return fetch(`${this.API_URL}/list`, {
+    const { REACT_APP_API_URL, REACT_APP_JWT } = process.env;
+    return axios(`${REACT_APP_API_URL}/list`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${this.JWT}`,
+        Authorization: `Bearer ${REACT_APP_JWT}`,
       },
     });
   },
 
   getUserByID(ID: string | undefined) {
-    return fetch(`${this.API_URL}/get/${ID}`, {
+    const { REACT_APP_API_URL, REACT_APP_JWT } = process.env;
+    return axios(`${REACT_APP_API_URL}/get/${ID}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${this.JWT}`,
+        Authorization: `Bearer ${REACT_APP_JWT}`,
       },
     });
   },

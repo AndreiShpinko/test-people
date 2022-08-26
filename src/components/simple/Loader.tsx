@@ -1,14 +1,13 @@
-import React from "react";
 import styled from "styled-components";
 
 type LoaderProps = {
   color?: string;
-  styles?: string;
+  size?: string;
 };
 
-const Loader = ({ color = "#000", styles }: LoaderProps) => {
+const Loader = ({ color = "#000", size = "normal" }: LoaderProps) => {
   return (
-    <LoaderWrapper color={color} styles={styles}>
+    <LoaderWrapper color={color} size={size}>
       <div></div>
       <div></div>
       <div></div>
@@ -19,15 +18,17 @@ const Loader = ({ color = "#000", styles }: LoaderProps) => {
 
 interface LinkWrapperProps {
   color: string;
-  styles?: string;
+  size: string;
 }
 
 const LoaderWrapper = styled.div<LinkWrapperProps>`
   display: inline-block;
   position: relative;
-  width: 80px;
   aspect-ratio: 2;
-  ${({ styles }) => styles}
+  ${({ size }) => {
+    if (size === "normal") return "width: 80px;";
+    else if (size === "big") return "width: 100px;";
+  }}
 
   div {
     position: absolute;

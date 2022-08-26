@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import Title from "../ui/Title";
-import Loader from "../simple/Loader";
+import Title from "../../ui/Title/Title";
+import Loader from "../../simple/Loader";
 
-import Services from "../../core/services";
+import Services from "../../../core/services";
 
 import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { useAlert } from "react-alert";
 
-import { color_blue } from "../../core/constants";
+import { color_blue } from "../../../core/constants";
 
 type CardProps = {
   userID: string;
 };
 
 const Card = ({ userID }: CardProps) => {
-  // false - while dont see card
-  // null - error
-  // string - success
+  // false, string
   const [firstName, setFirstName] = useState<any>(false);
+  const [error, setError] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const alert = useAlert();
@@ -32,31 +31,31 @@ const Card = ({ userID }: CardProps) => {
   useEffect(() => {
     if (firstName === false && inView) {
       Services.getUserByID(userID)
-        .then((res) => res.json())
+        .then((res) => res.data)
         .then((res) => {
           if (res.data) setFirstName(res.data.firstName);
-          else setFirstName(null);
+          else setError(true);
         })
         .catch((error) => {
           console.log(error, "card");
-          setFirstName(null);
+          setError(true);
         });
     }
   }, [inView]);
 
   let inner;
-  if (firstName === null) {
+  if (error) {
     inner = <Title>Error</Title>;
-  } else if (!firstName) {
+  } else if (!firstName && !error) {
     inner = <Loader color="#fff" />;
   } else {
     inner = <Title>{firstName}</Title>;
   }
 
   const handlerCardClick = () => {
-    if (firstName === null) {
+    if (error) {
       alert.error("Sorry, you can't use it. Error");
-    } else if (!firstName) {
+    } else if (!firstName && !error) {
       alert.error("Please wait for loading");
     } else {
       navigate(`../person/${userID}`);
@@ -65,6 +64,7 @@ const Card = ({ userID }: CardProps) => {
 
   return (
     <CardWrapper
+      data-listid={firstName && "link-to-person"}
       ref={ref}
       onClick={handlerCardClick}
       opacity={firstName ? 1 : 0}
