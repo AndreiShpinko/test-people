@@ -45,29 +45,30 @@ const Person = () => {
   const getRandomColor = () =>
     colors[Math.floor(Math.random() * colors.length)];
 
-  let inner;
+  const { firstName, lastName, age, gender, country } = user;
+  let inner = (
+    <div data-testid="user-info">
+      <Title>{`${firstName} ${lastName}`}</Title>
+      <Subtitle>{`${gender}, ${age}y.o.`}</Subtitle>
+
+      <Reference source={`https://www.google.com/maps/search/${country}`}>
+        <Subtitle styles={"display: inline-block;"}>{country}</Subtitle>
+      </Reference>
+    </div>
+  );
 
   if (error) {
-    inner = <Title>Error</Title>;
-  } else {
-    const { firstName, lastName, age, gender, country } = user;
-
     inner = (
-      <>
-        <Title>{`${firstName} ${lastName}`}</Title>
-        <Subtitle>{`${gender}, ${age}y.o.`}</Subtitle>
-
-        <Reference source={`https://www.google.com/maps/search/${country}`}>
-          <Subtitle styles={"display: inline-block;"}>{country}</Subtitle>
-        </Reference>
-      </>
+      <div data-testid="error">
+        <Title>Error</Title>
+      </div>
     );
   }
 
   return (
-    <Wrapper data-testid="page-person">
+    <Wrapper>
       {!user && !error ? (
-        <WrapperLoader>
+        <WrapperLoader data-testid="loader">
           <Loader size="big" />
         </WrapperLoader>
       ) : (

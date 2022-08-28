@@ -19,7 +19,6 @@ const Home = () => {
 
   // empty array, array with data
   const [userList, setUserList] = useState<any>([]);
-
   const [gettingRequest, setGettingRequest] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
@@ -55,14 +54,14 @@ const Home = () => {
   }, [error]);
 
   return (
-    <Wrapper data-testid="page-home">
+    <Wrapper>
       {!userList.length && !error ? (
-        <WrapperLoader>
+        <WrapperLoader data-testid="loader">
           <Loader size={"big"} />
         </WrapperLoader>
       ) : (
         <Container>
-          <Panel>
+          <Panel data-testid="panel">
             <Button click={handlerBtnReload}>
               <Subtitle>Reload</Subtitle>
             </Button>
@@ -72,14 +71,16 @@ const Home = () => {
           </Panel>
 
           <Fade duration={300} when={error}>
-            <Title>Error</Title>
+            <div data-testid="error">
+              <Title>Error</Title>
+            </div>
           </Fade>
 
           <Fade left opposite when={!gettingRequest && !error}>
-            <List>
+            <List data-testid="users-list">
               {userList.map((userID: string) => {
                 return (
-                  <Item key={userID}>
+                  <Item key={userID} data-testid="card-wrapper">
                     <Card userID={userID} />
                   </Item>
                 );

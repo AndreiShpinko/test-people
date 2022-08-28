@@ -14,9 +14,10 @@ import { color_blue } from "../../../core/constants";
 
 type CardProps = {
   userID: string;
+  initialInView?: boolean;
 };
 
-const Card = ({ userID }: CardProps) => {
+const Card = ({ userID, initialInView = false }: CardProps) => {
   // false, string
   const [firstName, setFirstName] = useState<any>(false);
   const [error, setError] = useState<boolean>(false);
@@ -26,14 +27,15 @@ const Card = ({ userID }: CardProps) => {
 
   const { ref, inView } = useInView({
     threshold: 0,
+    initialInView: initialInView,
   });
 
   useEffect(() => {
-    if (firstName === false && inView) {
+    if (inView) {
       Services.getUserByID(userID)
         .then((res) => res.data)
-        .then((res) => {
-          if (res.data) setFirstName(res.data.firstName);
+        .then(({ data }) => {
+          if (data) setFirstName(data.firstName);
           else setError(true);
         })
         .catch((error) => {
@@ -43,13 +45,24 @@ const Card = ({ userID }: CardProps) => {
     }
   }, [inView]);
 
-  let inner;
+  let inner = (
+    <div data-testid="firstname">
+      <Title>{firstName}</Title>
+    </div>
+  );
+
   if (error) {
-    inner = <Title>Error</Title>;
+    inner = (
+      <div data-testid="error">
+        <Title>Error</Title>
+      </div>
+    );
   } else if (!firstName && !error) {
-    inner = <Loader color="#fff" />;
-  } else {
-    inner = <Title>{firstName}</Title>;
+    inner = (
+      <div data-testid="loader">
+        <Loader color="#fff" />
+      </div>
+    );
   }
 
   const handlerCardClick = () => {
@@ -64,10 +77,10 @@ const Card = ({ userID }: CardProps) => {
 
   return (
     <CardWrapper
-      data-listid={firstName && "link-to-person"}
       ref={ref}
       onClick={handlerCardClick}
       opacity={firstName ? 1 : 0}
+      data-testid='card'
     >
       {inner}
     </CardWrapper>
@@ -75,9 +88,7 @@ const Card = ({ userID }: CardProps) => {
 };
 
 interface LinkWrapperProps {
-  // ref: React.RefObject<HTMLInputElement>;
   ref: (instance: HTMLDivElement | null) => void;
-  // ref: ;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   opacity: number;
 }

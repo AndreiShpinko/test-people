@@ -1,16 +1,22 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import axiosMock from "axios";
 import "@testing-library/jest-dom";
 
 import { MemoryRouter } from "react-router-dom";
 import { positions, Provider } from "react-alert";
-import Home from "./Home";
+import Card from "./Card";
+
+import {
+  mockAllIsIntersecting,
+  mockIsIntersecting,
+  intersectionMockInstance,
+} from "react-intersection-observer/test-utils";
 
 jest.mock("axios");
 
 const AlertTemplate = require("react-alert-template-basic").default;
 
-describe("Home: ", () => {
+describe("Card: ", () => {
   beforeEach(() => {
     const mockIntersectionObserver = jest.fn();
     mockIntersectionObserver.mockReturnValue({
@@ -37,19 +43,24 @@ describe("Home: ", () => {
         position={positions.BOTTOM_CENTER}
       >
         <MemoryRouter>
-          <Home />
+          <Card userID="123" initialInView={true} />
         </MemoryRouter>
       </Provider>
     );
 
+    mockAllIsIntersecting(true);
+
     expect(screen.getByTestId("loader")).toBeInTheDocument();
+
     expect(await screen.findByTestId("error")).toBeInTheDocument();
   });
 
-  test("should display 'loader', and then 'panel', 'user-list', 'card-wrapper'", async () => {
+  test("should display 'loader', and then 'firstname'", async () => {
     const axiosResponse = {
       data: {
-        data: ["123", "234", "345"],
+        data: {
+          firstName: "Peter",
+        },
       },
     };
 
@@ -62,17 +73,15 @@ describe("Home: ", () => {
         position={positions.BOTTOM_CENTER}
       >
         <MemoryRouter>
-          <Home />
+          <Card userID="123" initialInView={true} />
         </MemoryRouter>
       </Provider>
     );
 
+    mockAllIsIntersecting(true);
+
     expect(screen.getByTestId("loader")).toBeInTheDocument();
 
-    expect(await screen.findByTestId("panel")).toBeInTheDocument();
-    expect(await screen.findByTestId("users-list")).toBeInTheDocument();
-    waitFor(async () => {
-      expect((await screen.findAllByTestId("card-wrapper")).length).toBe(3);
-    });
+    expect(await screen.findByTestId("firstname")).toBeInTheDocument();
   });
 });
